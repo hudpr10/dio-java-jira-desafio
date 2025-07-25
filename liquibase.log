@@ -1,15 +1,15 @@
-jul. 25, 2025 4:01:26 PM liquibase.changelog
+jul. 25, 2025 4:08:54 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241809.sql
-jul. 25, 2025 4:01:26 PM liquibase.changelog
+jul. 25, 2025 4:08:54 PM liquibase.changelog
 INFO: Reading from `desafio-jira`.databasechangelog
-jul. 25, 2025 4:01:26 PM liquibase.changelog
+jul. 25, 2025 4:08:54 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241828.sql
-jul. 25, 2025 4:01:26 PM liquibase.changelog
+jul. 25, 2025 4:08:54 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241841.sql
-jul. 25, 2025 4:01:26 PM liquibase.changelog
+jul. 25, 2025 4:08:54 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241845.sql
 Database is up to date, no changesets to execute
-jul. 25, 2025 4:01:26 PM liquibase.changelog
+jul. 25, 2025 4:08:54 PM liquibase.changelog
 INFO: Reading from `desafio-jira`.databasechangelog
 
 UPDATE SUMMARY
@@ -19,19 +19,19 @@ Filtered out:                 0
 -------------------------------
 Total change sets:            4
 
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: UPDATE SUMMARY
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: Run:                          0
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: Previously run:               4
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: Filtered out:                 0
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: -------------------------------
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: Total change sets:            4
-jul. 25, 2025 4:01:26 PM liquibase.util
+jul. 25, 2025 4:08:54 PM liquibase.util
 INFO: Update summary generated
-jul. 25, 2025 4:01:26 PM liquibase.command
+jul. 25, 2025 4:08:54 PM liquibase.command
 INFO: Command execution complete

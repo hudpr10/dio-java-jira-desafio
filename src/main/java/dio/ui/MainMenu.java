@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
     public void execute() throws SQLException {
         System.out.println("Boas vindas ao gerenciador de tarefas!");
@@ -97,8 +97,10 @@ public class MainMenu {
             Optional<BoardEntity> optional = boardQueryService.findById(id);
             optional.ifPresentOrElse(
                     b -> new BoardMenu(b).execute(),
-                    () -> System.out.printf("\nNão foi encontrado um BOARD com ID %s\n", id)
+                    () -> System.out.printf("Não foi encontrado um BOARD com ID %s\n", id)
             );
+
+            System.out.println();
 
         } catch (SQLException ex) {
             throw ex;
@@ -114,10 +116,12 @@ public class MainMenu {
             BoardService boardService = new BoardService(connection);
 
             if(boardService.delete(id)) {
-                System.out.printf("\nO BOARD %s foi excluido\n", id);
+                System.out.printf("O BOARD %s foi excluido\n", id);
             } else {
-                System.out.printf("\nNão foi encontrado um BOARD com ID %s\n", id);
+                System.out.printf("Não foi encontrado um BOARD com ID %s\n", id);
             }
+
+            System.out.println();
 
         } catch (SQLException e) {
             throw e;
