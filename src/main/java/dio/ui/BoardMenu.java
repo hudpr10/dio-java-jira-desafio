@@ -2,12 +2,15 @@ package dio.ui;
 
 import dio.dto.BoardDetailsDTO;
 import dio.persistence.config.ConnectionConfig;
+import dio.persistence.entity.BoardColumnEntity;
 import dio.persistence.entity.BoardEntity;
+import dio.service.BoardColumnQueryService;
 import dio.service.BoardQueryService;
 import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -45,8 +48,8 @@ public class BoardMenu {
                     case 4 -> unblockCard();
                     case 5 -> cancelCard();
                     case 6 -> showBoard();
-                    case 7 -> showCards();
-                    case 8 -> showColumnsAndCards();
+                    case 7 -> showColumns();
+                    case 8 -> showCards();
                     case 9 -> System.out.println("Voltando ao menu anterior");
                     case 10 -> System.exit(0);
                     default -> System.out.println("Opção inválida.");
@@ -87,9 +90,26 @@ public class BoardMenu {
         );
     }
 
-    private void showCards() {
+    private void showColumns() throws SQLException {
+        List<Long> columnsIds = boardEntity.getBoardsColumns().stream().map(BoardColumnEntity::getId).toList();
+
+        long selectedColumn = -1L;
+        while(!columnsIds.contains(selectedColumn)) {
+            System.out.printf("Escolha uma coluna do Board %s\n", boardEntity.getName());
+            boardEntity.getBoardsColumns().forEach(c -> System.out.printf("%s. %s [%s]\n", c.getId(), c.getName(), c.getKind()));
+            selectedColumn = scanner.nextLong();
+        }
+
+        Connection connection = ConnectionConfig.getConnection();
+        Optional<BoardColumnEntity> optional = new BoardColumnQueryService(connection).findById(selectedColumn);
+        optional.ifPresent(co -> {
+            System.out.printf("Coluna: %s | Tipo: %s\n", co.getName(), co.getKind());
+            co.getCardList().forEach(ca ->
+                    System.out.printf("Card: %s. %s\nDescrição: %s\n", ca.getId(), ca.getTitle(), ca.getDescription())
+            );
+        });
     }
 
-    private void showColumnsAndCards() {
+    private void showCards() {
     }
 }

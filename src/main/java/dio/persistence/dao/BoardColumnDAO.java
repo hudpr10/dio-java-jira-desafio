@@ -3,6 +3,7 @@ package dio.persistence.dao;
 import dio.dto.BoardColumnDTO;
 import dio.persistence.entity.BoardColumnEntity;
 import dio.persistence.entity.BoardColumnKindEnum;
+import dio.persistence.entity.CardEntity;
 import lombok.RequiredArgsConstructor;
 
 import javax.xml.transform.Result;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class BoardColumnDAO {
@@ -35,14 +37,14 @@ public class BoardColumnDAO {
         return boardColumnEntity;
     }
 
-    public List<BoardColumnEntity> findByBoardId(final long id) throws SQLException {
+    public List<BoardColumnEntity> findByBoardId(final long boardId) throws SQLException {
         List<BoardColumnEntity> boardColumnList = new ArrayList<>();
 
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT id, name, column_order, kind FROM boards_columns WHERE board_id = ? ORDER BY column_order;"
             );
-            statement.setLong(1, id);
+            statement.setLong(1, boardId);
             statement.executeQuery();
 
             ResultSet resultSet = statement.getResultSet();
@@ -93,4 +95,36 @@ public class BoardColumnDAO {
         return boardColumnsDTOs;
     }
 
+    public Optional<BoardColumnEntity> findById(final long boardId) throws SQLException {
+        Optional<BoardColumnEntity> optional = Optional.empty();
+
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT bc.name, bc.kind, c.id, c.title, c.description " +
+                        "FROM boards_columns bc " +
+                        "INNER JOIN cards c ON c.board_column_id = bc.id " +
+                        "WHERE bc.id = ?;"
+        );
+        statement.setLong(1, boardId);
+        statement.executeQuery();
+
+        ResultSet resultSet = statement.getResultSet();
+        if(resultSet.next()) {
+            BoardColumnEntity boardColumn = new BoardColumnEntity();
+            boardColumn.setName(resultSet.getString("name"));
+            boardColumn.setKind(BoardColumnKindEnum.findByName(resultSet.getString("kind")));
+
+            do {
+                CardEntity card = new CardEntity();
+                card.setId(resultSet.getLong("c.id"));
+                card.setTitle(resultSet.getString("c.title"));
+                card.setDescription(resultSet.getString("c.description"));
+                boardColumn.getCardList().add(card);
+
+            } while(resultSet.next());
+
+            optional = Optional.of(boardColumn);
+        }
+
+        return optional;
+    }
 }
