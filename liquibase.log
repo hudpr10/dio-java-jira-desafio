@@ -1,60 +1,69 @@
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:37 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241809.sql
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
+INFO: Creating database history table with name: `desafio-jira`.databasechangelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Reading from `desafio-jira`.databasechangelog
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241828.sql
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241841.sql
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Reading resource: db/changelog/migrations/db.changelog-202507241845.sql
-jul. 24, 2025 6:52:35 PM liquibase.lockservice
+jul. 25, 2025 1:09:38 PM liquibase.snapshot
+INFO: Creating snapshot
+jul. 25, 2025 1:09:38 PM liquibase.lockservice
 INFO: Successfully acquired change log lock
-jul. 24, 2025 6:52:35 PM liquibase.command
-INFO: Using deploymentId: 3393954786
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.command
+INFO: Using deploymentId: 3459777769
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Reading from `desafio-jira`.databasechangelog
+Running Changeset: db/changelog/migrations/db.changelog-202507241809.sql::202507241809::hudson
+jul. 25, 2025 1:09:38 PM liquibase.changelog
+INFO: Custom SQL executed
+jul. 25, 2025 1:09:38 PM liquibase.changelog
+INFO: ChangeSet db/changelog/migrations/db.changelog-202507241809.sql::202507241809::hudson ran successfully in 18ms
 Running Changeset: db/changelog/migrations/db.changelog-202507241828.sql::202507241828::hudson
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Custom SQL executed
-jul. 24, 2025 6:52:35 PM liquibase.changelog
-INFO: ChangeSet db/changelog/migrations/db.changelog-202507241828.sql::202507241828::hudson ran successfully in 41ms
+jul. 25, 2025 1:09:38 PM liquibase.changelog
+INFO: ChangeSet db/changelog/migrations/db.changelog-202507241828.sql::202507241828::hudson ran successfully in 25ms
 Running Changeset: db/changelog/migrations/db.changelog-202507241841.sql::202507241841::hudson
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Custom SQL executed
-jul. 24, 2025 6:52:35 PM liquibase.changelog
-INFO: ChangeSet db/changelog/migrations/db.changelog-202507241841.sql::202507241841::hudson ran successfully in 25ms
+jul. 25, 2025 1:09:38 PM liquibase.changelog
+INFO: ChangeSet db/changelog/migrations/db.changelog-202507241841.sql::202507241841::hudson ran successfully in 22ms
 Running Changeset: db/changelog/migrations/db.changelog-202507241845.sql::202507241845::hudson
-jul. 24, 2025 6:52:35 PM liquibase.changelog
+jul. 25, 2025 1:09:38 PM liquibase.changelog
 INFO: Custom SQL executed
-jul. 24, 2025 6:52:35 PM liquibase.changelog
-INFO: ChangeSet db/changelog/migrations/db.changelog-202507241845.sql::202507241845::hudson ran successfully in 23ms
+jul. 25, 2025 1:09:38 PM liquibase.changelog
+INFO: ChangeSet db/changelog/migrations/db.changelog-202507241845.sql::202507241845::hudson ran successfully in 24ms
 
 UPDATE SUMMARY
-Run:                          3
-Previously run:               1
+Run:                          4
+Previously run:               0
 Filtered out:                 0
 -------------------------------
 Total change sets:            4
 
-jul. 24, 2025 6:52:35 PM liquibase.util
+jul. 25, 2025 1:09:38 PM liquibase.util
 INFO: UPDATE SUMMARY
-jul. 24, 2025 6:52:35 PM liquibase.util
-INFO: Run:                          3
-jul. 24, 2025 6:52:35 PM liquibase.util
-INFO: Previously run:               1
-jul. 24, 2025 6:52:35 PM liquibase.util
+jul. 25, 2025 1:09:38 PM liquibase.util
+INFO: Run:                          4
+jul. 25, 2025 1:09:38 PM liquibase.util
+INFO: Previously run:               0
+jul. 25, 2025 1:09:38 PM liquibase.util
 INFO: Filtered out:                 0
-jul. 24, 2025 6:52:35 PM liquibase.util
+jul. 25, 2025 1:09:38 PM liquibase.util
 INFO: -------------------------------
-jul. 24, 2025 6:52:35 PM liquibase.util
+jul. 25, 2025 1:09:38 PM liquibase.util
 INFO: Total change sets:            4
-jul. 24, 2025 6:52:35 PM liquibase.util
+jul. 25, 2025 1:09:38 PM liquibase.util
 INFO: Update summary generated
-jul. 24, 2025 6:52:35 PM liquibase.command
+jul. 25, 2025 1:09:38 PM liquibase.command
 INFO: Update command completed successfully.
-Liquibase: Update has been successful. Rows affected: 3
-jul. 24, 2025 6:52:35 PM liquibase.lockservice
+Liquibase: Update has been successful. Rows affected: 4
+jul. 25, 2025 1:09:38 PM liquibase.lockservice
 INFO: Successfully released change log lock
-jul. 24, 2025 6:52:35 PM liquibase.command
+jul. 25, 2025 1:09:38 PM liquibase.command
 INFO: Command execution complete
