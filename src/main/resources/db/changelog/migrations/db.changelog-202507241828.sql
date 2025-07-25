@@ -6,7 +6,7 @@ CREATE TABLE boards_columns(
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     column_order INT NOT NULL,
-    kind VARCHAR(7) NOT NULL,
+    kind VARCHAR(8) NOT NULL,
     board_id BIGINT NOT NULL,
 
     CONSTRAINT fk_boards__boards_columns FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE,

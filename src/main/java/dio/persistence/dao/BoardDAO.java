@@ -1,29 +1,14 @@
 package dio.persistence.dao;
 
-import dio.persistence.config.ConnectionConfig;
 import dio.persistence.entity.BoardEntity;
 import lombok.AllArgsConstructor;
 
-import java.beans.Statement;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
-import java.sql.Struct;
-import java.util.Map;
+import java.sql.Statement;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.concurrent.Executor;
 
 @AllArgsConstructor
 public class BoardDAO {
@@ -31,13 +16,13 @@ public class BoardDAO {
     private final Connection connection;
 
     public BoardEntity insert(final BoardEntity boardEntity) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO boards(name) VALUES (?);");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO boards(name) VALUES (?);", Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, boardEntity.getName());
         statement.executeUpdate();
 
-        ResultSet resultSet = statement.getResultSet();
+        ResultSet resultSet = statement.getGeneratedKeys();
         if(resultSet.next()) {
-            boardEntity.setId(resultSet.getLong("id"));
+            boardEntity.setId(resultSet.getLong(1));
         }
 
         return boardEntity;

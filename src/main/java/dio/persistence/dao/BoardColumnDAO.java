@@ -27,11 +27,6 @@ public class BoardColumnDAO {
             statement.setLong(i, boardColumnEntity.getBoardEntity().getId());
             statement.executeUpdate();
 
-            ResultSet resultSet = statement.getResultSet();
-            if(resultSet.next()) {
-                boardColumnEntity.setId(resultSet.getLong("id"));
-            }
-
         } catch(SQLException ex) {
             ex.printStackTrace();
         }

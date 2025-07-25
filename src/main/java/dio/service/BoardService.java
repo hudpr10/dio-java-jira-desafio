@@ -23,12 +23,12 @@ public class BoardService {
         try {
             boardDAO.insert(boardEntity);
 
-//            List<BoardColumnEntity> boardsColumns = boardEntity.getBoardsColumns().stream().map(bc -> {
-//                bc.setBoardEntity(boardEntity);
-//                return bc;
-//            }).toList();
-            for(BoardColumnEntity boardColumn : boardEntity.getBoardsColumns()) {
-                boardColumnDAO.insert(boardColumn);
+            List<BoardColumnEntity> boardsColumns = boardEntity.getBoardsColumns().stream().map(bc -> {
+                bc.setBoardEntity(boardEntity);
+                return bc;
+            }).toList();
+            for(BoardColumnEntity bc : boardsColumns) {
+                boardColumnDAO.insert(bc);
             }
 
             connection.commit();
