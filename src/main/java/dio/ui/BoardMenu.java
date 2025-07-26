@@ -89,8 +89,8 @@ public class BoardMenu {
                 .stream()
                 .map(column -> new BoardColumnIdOrderKindDTO(column.getId(), column.getOrder(), column.getKind()))
                 .toList();
-        Connection connection = ConnectionConfig.getConnection();
 
+        Connection connection = ConnectionConfig.getConnection();
         try {
             new CardService(connection).moveToNextColumn(boardEntity.getId(), cardId, boardColumnIdOrderKindList);
         } catch(RuntimeException ex) {
@@ -105,7 +105,22 @@ public class BoardMenu {
     private void unblockCard() {
     }
 
-    private void cancelCard() {
+    private void cancelCard() throws SQLException {
+        System.out.print("Informe o ID do card para cancelá-lo: ");
+        long cardId = scanner.nextLong();
+
+        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity
+                .getBoardsColumns()
+                .stream()
+                .map(column -> new BoardColumnIdOrderKindDTO(column.getId(), column.getOrder(), column.getKind()))
+                .toList();
+
+        Connection connection = ConnectionConfig.getConnection();
+        try {
+            new CardService(connection).cancel(boardEntity.getId(), cardId, boardColumnIdOrderKindList);
+        } catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void showBoard() throws SQLException {

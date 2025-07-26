@@ -45,28 +45,60 @@ public class CardService {
                             .formatted(cardId))
                     );
 
-            if(cardDetails.blocked()) {
-                throw new CardBlockedException("O card de ID %s está bloqueado.".formatted(cardId));
-            }
-
             BoardColumnIdOrderKindDTO currentColumn = boardColumnIdOrderKindList
                     .stream()
                     .filter(column -> column.id() == cardDetails.columnId())
                     .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("O card informado portence a outro Board."));
+                    .orElseThrow(() -> new IllegalStateException("O card informado pertence a outro Board."));
 
             if(currentColumn.kind().equals(BoardColumnKindEnum.FINAL)) {
-                throw new CardFinishedException("O card informado já está na coluna final");
+                throw new CardFinishedException("O card informado já está na coluna final.");
             }
-            // Tratando possíveis erros -----
 
             BoardColumnIdOrderKindDTO nextColumn = boardColumnIdOrderKindList
                     .stream()
                     .filter(column -> column.columnOrder() == currentColumn.columnOrder() + 1)
                     .findFirst()
-                    .orElseThrow();
+                    .orElseThrow(() -> new IllegalStateException("O card está cancelado, não é possível mover."));
+            // Tratando possíveis erros -----
 
             cardDAO.moveToColumn(nextColumn.id(), cardId);
+            connection.commit();
+        } catch(SQLException ex) {
+            connection.rollback();
+            throw ex;
+        }
+    }
+
+    public void cancel(final long boardId, final long cardId, List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList) throws SQLException {
+        try {
+            CardDAO cardDAO = new CardDAO(connection);
+            Optional<CardDetailsDTO> optional = cardDAO.findById(cardId, boardId);
+
+            // Tratando possíveis erros -----
+            CardDetailsDTO cardDetails = optional
+                    .orElseThrow(() -> new EntityNotFoundException("O card de ID %s não foi encontrado."
+                            .formatted(cardId))
+                    );
+
+            BoardColumnIdOrderKindDTO currentColumn = boardColumnIdOrderKindList
+                    .stream()
+                    .filter(column -> column.id() == cardDetails.columnId())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("O card informado pertence a outro Board."));
+
+            if(currentColumn.kind() == BoardColumnKindEnum.FINAL) {
+                throw new IllegalStateException("O card já foi finalizado, não é possível mover.");
+            }
+
+            BoardColumnIdOrderKindDTO cancelColumn = boardColumnIdOrderKindList
+                    .stream()
+                    .filter(column -> column.kind() == BoardColumnKindEnum.CANCELED)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Testando......"));
+            // Tratando possíveis erros -----
+
+            cardDAO.moveToColumn(cancelColumn.id(), cardId);
             connection.commit();
         } catch(SQLException ex) {
             connection.rollback();
