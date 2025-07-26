@@ -1,5 +1,6 @@
 package dio.ui;
 
+import dio.dto.BoardColumnIdOrderKindDTO;
 import dio.dto.BoardDetailsDTO;
 import dio.persistence.config.ConnectionConfig;
 import dio.persistence.entity.BoardColumnEntity;
@@ -79,7 +80,23 @@ public class BoardMenu {
         new CardService(connection).insert(cardEntity);
     }
 
-    private void moveCardToNextColumn() {
+    private void moveCardToNextColumn() throws SQLException {
+        System.out.print("Informe o ID do card: ");
+        long cardId = scanner.nextLong();
+
+        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity
+                .getBoardsColumns()
+                .stream()
+                .map(column -> new BoardColumnIdOrderKindDTO(column.getId(), column.getOrder(), column.getKind()))
+                .toList();
+        Connection connection = ConnectionConfig.getConnection();
+
+        try {
+            new CardService(connection).moveToNextColumn(boardEntity.getId(), cardId, boardColumnIdOrderKindList);
+        } catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     private void blockCard() {

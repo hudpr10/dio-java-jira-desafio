@@ -1,11 +1,20 @@
 package dio.service;
 
+import dio.dto.BoardColumnDTO;
+import dio.dto.BoardColumnIdOrderKindDTO;
+import dio.dto.CardDetailsDTO;
+import dio.exception.CardBlockedException;
+import dio.exception.CardFinishedException;
+import dio.exception.EntityNotFoundException;
 import dio.persistence.dao.CardDAO;
+import dio.persistence.entity.BoardColumnKindEnum;
 import dio.persistence.entity.CardEntity;
 import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class CardService {
@@ -19,6 +28,46 @@ public class CardService {
             connection.commit();
 
             return cardEntity;
+        } catch(SQLException ex) {
+            connection.rollback();
+            throw ex;
+        }
+    }
+
+    public void moveToNextColumn(final long boardId, final long cardId, List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList) throws SQLException {
+        try {
+            CardDAO cardDAO = new CardDAO(connection);
+            Optional<CardDetailsDTO> optional = cardDAO.findById(cardId, boardId);
+
+            // Tratando possíveis erros -----
+            CardDetailsDTO cardDetails = optional
+                    .orElseThrow(() -> new EntityNotFoundException("O card de ID %s não foi encontrado."
+                            .formatted(cardId))
+                    );
+
+            if(cardDetails.blocked()) {
+                throw new CardBlockedException("O card de ID %s está bloqueado.".formatted(cardId));
+            }
+
+            BoardColumnIdOrderKindDTO currentColumn = boardColumnIdOrderKindList
+                    .stream()
+                    .filter(column -> column.id() == cardDetails.columnId())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("O card informado portence a outro Board."));
+
+            if(currentColumn.kind().equals(BoardColumnKindEnum.FINAL)) {
+                throw new CardFinishedException("O card informado já está na coluna final");
+            }
+            // Tratando possíveis erros -----
+
+            BoardColumnIdOrderKindDTO nextColumn = boardColumnIdOrderKindList
+                    .stream()
+                    .filter(column -> column.columnOrder() == currentColumn.columnOrder() + 1)
+                    .findFirst()
+                    .orElseThrow();
+
+            cardDAO.moveToColumn(nextColumn.id(), cardId);
+            connection.commit();
         } catch(SQLException ex) {
             connection.rollback();
             throw ex;
