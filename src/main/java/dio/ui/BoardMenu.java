@@ -84,12 +84,7 @@ public class BoardMenu {
         System.out.print("Informe o ID do card: ");
         long cardId = scanner.nextLong();
 
-        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity
-                .getBoardsColumns()
-                .stream()
-                .map(column -> new BoardColumnIdOrderKindDTO(column.getId(), column.getOrder(), column.getKind()))
-                .toList();
-
+        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity.getAllBoards();
         Connection connection = ConnectionConfig.getConnection();
         try {
             new CardService(connection).moveToNextColumn(boardEntity.getId(), cardId, boardColumnIdOrderKindList);
@@ -99,22 +94,30 @@ public class BoardMenu {
 
     }
 
-    private void blockCard() {
+    private void blockCard() throws SQLException {
+        System.out.print("Informe o ID do card: ");
+        long cardId = scanner.nextLong();
+
+        System.out.print("Informe o motivo do bloqueio do card: ");
+        String blockReason = scanner.next();
+
+        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity.getAllBoards();
+        Connection connection = ConnectionConfig.getConnection();
+        try {
+            new CardService(connection).block(boardEntity.getId(), cardId, blockReason, boardColumnIdOrderKindList);
+        } catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
-    private void unblockCard() {
+    private void unblockCard() throws SQLException {
     }
 
     private void cancelCard() throws SQLException {
         System.out.print("Informe o ID do card para cancelá-lo: ");
         long cardId = scanner.nextLong();
 
-        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity
-                .getBoardsColumns()
-                .stream()
-                .map(column -> new BoardColumnIdOrderKindDTO(column.getId(), column.getOrder(), column.getKind()))
-                .toList();
-
+        List<BoardColumnIdOrderKindDTO> boardColumnIdOrderKindList = boardEntity.getAllBoards();
         Connection connection = ConnectionConfig.getConnection();
         try {
             new CardService(connection).cancel(boardEntity.getId(), cardId, boardColumnIdOrderKindList);

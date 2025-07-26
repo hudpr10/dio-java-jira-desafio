@@ -1,5 +1,6 @@
 package dio.persistence.entity;
 
+import dio.dto.BoardColumnIdOrderKindDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,11 +18,18 @@ public class BoardEntity {
     private List<BoardColumnEntity> boardsColumns = new ArrayList<>();
 
     public BoardColumnEntity getInitialColumn() {
-        return getFilteredColumn(column -> column.getKind().equals(BoardColumnKindEnum.FINAL));
+        return getFilteredColumn(column -> column.getKind().equals(BoardColumnKindEnum.INITIAL));
     }
 
     public BoardColumnEntity getCancelColumn() {
         return getFilteredColumn(column -> column.getKind().equals(BoardColumnKindEnum.CANCELED));
+    }
+
+    public List<BoardColumnIdOrderKindDTO> getAllBoards() {
+        return boardsColumns
+                .stream()
+                .map(column -> new BoardColumnIdOrderKindDTO(column.getId(), column.getOrder(), column.getKind()))
+                .toList();
     }
 
     private BoardColumnEntity getFilteredColumn(Predicate<BoardColumnEntity> filter) {
