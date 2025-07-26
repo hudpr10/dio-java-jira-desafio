@@ -2,6 +2,7 @@ package dio.service;
 
 import dio.dto.BoardColumnIdOrderKindDTO;
 import dio.dto.CardDetailsDTO;
+import dio.exception.CardBlockedException;
 import dio.exception.CardFinishedException;
 import dio.exception.EntityNotFoundException;
 import dio.persistence.dao.BlockDAO;
@@ -148,4 +149,26 @@ public class CardService {
         }
     }
 
+    public void unblock(final long boardId, final long cardId, final String unblockReason) throws SQLException {
+        try {
+            CardDAO cardDAO = new CardDAO(connection);
+            Optional<CardDetailsDTO> optional = cardDAO.findById(cardId, boardId);
+            CardDetailsDTO cardDetails = optional
+                    .orElseThrow(() -> new EntityNotFoundException("O card de ID %s não foi encontrado."
+                            .formatted(cardId))
+                    );
+
+            if(!cardDetails.blocked()) {
+                throw new CardBlockedException("O card não está bloqueado.");
+            }
+
+            BlockDAO blockDAO = new BlockDAO(connection);
+            blockDAO.unblockCard(cardId, unblockReason);
+            connection.commit();
+            System.out.println("Card desbloqueado.");
+        } catch(SQLException ex) {
+            connection.rollback();
+            throw ex;
+        }
+    }
 }
