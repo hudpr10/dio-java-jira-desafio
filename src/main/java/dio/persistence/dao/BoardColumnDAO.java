@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 @RequiredArgsConstructor
 public class BoardColumnDAO {
 
@@ -69,8 +71,8 @@ public class BoardColumnDAO {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT bc.id, bc.name, bc.kind, COUNT(SELECT c.id FROM cards c WHERE c.board_column_id = bc.id) cards_amount " +
-                            "FROM boards_columns bc" +
+                    "SELECT bc.id, bc.name, bc.kind, (SELECT COUNT(c.id) FROM cards c WHERE c.board_column_id = bc.id) cards_amount " +
+                            "FROM boards_columns bc " +
                             "WHERE board_id = ? " +
                             "ORDER BY column_order;"
             );
@@ -96,12 +98,10 @@ public class BoardColumnDAO {
     }
 
     public Optional<BoardColumnEntity> findById(final long boardId) throws SQLException {
-        Optional<BoardColumnEntity> optional = Optional.empty();
-
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT bc.name, bc.kind, c.id, c.title, c.description " +
                         "FROM boards_columns bc " +
-                        "INNER JOIN cards c ON c.board_column_id = bc.id " +
+                        "LEFT JOIN cards c ON c.board_column_id = bc.id " +
                         "WHERE bc.id = ?;"
         );
         statement.setLong(1, boardId);
@@ -114,6 +114,9 @@ public class BoardColumnDAO {
             boardColumn.setKind(BoardColumnKindEnum.findByName(resultSet.getString("kind")));
 
             do {
+                if(isNull(resultSet.getString("c.title"))) {
+                    break;
+                }
                 CardEntity card = new CardEntity();
                 card.setId(resultSet.getLong("c.id"));
                 card.setTitle(resultSet.getString("c.title"));
@@ -122,9 +125,9 @@ public class BoardColumnDAO {
 
             } while(resultSet.next());
 
-            optional = Optional.of(boardColumn);
+            return Optional.of(boardColumn);
         }
 
-        return optional;
+        return Optional.empty();
     }
 }

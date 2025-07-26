@@ -100,7 +100,7 @@ public class MainMenu {
                     () -> System.out.printf("Não foi encontrado um BOARD com ID %s\n", id)
             );
 
-            System.out.println();
+
 
         } catch (SQLException ex) {
             throw ex;

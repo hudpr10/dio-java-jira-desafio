@@ -4,8 +4,11 @@ import dio.dto.BoardDetailsDTO;
 import dio.persistence.config.ConnectionConfig;
 import dio.persistence.entity.BoardColumnEntity;
 import dio.persistence.entity.BoardEntity;
+import dio.persistence.entity.CardEntity;
 import dio.service.BoardColumnQueryService;
 import dio.service.BoardQueryService;
+import dio.service.CardQueryService;
+import dio.service.CardService;
 import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
@@ -22,7 +25,8 @@ public class BoardMenu {
 
     public void execute() {
         try {
-            System.out.printf("Bem vindo ao BOARD %s", boardEntity.getName());
+
+            System.out.printf("\nBem vindo ao BOARD %s\n", boardEntity.getName());
             System.out.println("Selecione a operacao desejada:");
 
             int option = -1;
@@ -34,8 +38,8 @@ public class BoardMenu {
                 System.out.println("5. Cancelar um card.");
 
                 System.out.println("6. Ver board.");
-                System.out.println("7. Ver cards.");
-                System.out.println("8. Ver colunas com cards.");
+                System.out.println("7. Ver colunas com cards.");
+                System.out.println("8. Ver card pelo ID.");
 
                 System.out.println("9. Voltar ao menu anterior.");
                 System.out.println("10. Sair do sistema.");
@@ -61,7 +65,18 @@ public class BoardMenu {
         }
     }
 
-    private void createCard() {
+    private void createCard() throws SQLException {
+        CardEntity cardEntity = new CardEntity();
+        System.out.print("Informe o título do card: ");
+        cardEntity.setTitle(scanner.next());
+
+        System.out.print("Informe a descrição do card: ");
+        cardEntity.setDescription(scanner.next());
+
+        cardEntity.setBoardColumn(boardEntity.getInitialColumn());
+
+        Connection connection = ConnectionConfig.getConnection();
+        new CardService(connection).insert(cardEntity);
     }
 
     private void moveCardToNextColumn() {
@@ -82,9 +97,9 @@ public class BoardMenu {
 
         optional.ifPresent(
                 b -> {
-                    System.out.printf("BOARD ID: %s | Nome: %s", b.id(), b.name());
+                    System.out.printf("BOARD ID: %s | Nome: %s\n", b.id(), b.name());
                     b.boardColumnDTOs().forEach(c -> {
-                        System.out.printf("\nColuna %s | Tipo: %s | Quantidade de Cards: %s", c.name(), c.kind(), c.cardsAmount());
+                        System.out.printf("Coluna %s | Tipo: %s | Quantidade de Cards: %s\n", c.name(), c.kind(), c.cardsAmount());
                     });
                 }
         );
@@ -110,6 +125,24 @@ public class BoardMenu {
         });
     }
 
-    private void showCards() {
+    private void showCards() throws SQLException {
+        System.out.print("Informe o ID do CARD que deseja visualizar: ");
+        long selectedCard = scanner.nextLong();
+
+        Connection connection = ConnectionConfig.getConnection();
+        new CardQueryService(connection).findById(selectedCard, boardEntity.getId())
+                .ifPresentOrElse(c -> {
+                            System.out.printf("Card %s. %s\n", c.id(), c.title());
+                            System.out.println("Descrição: " + c.description());
+                            if(c.blocked()) {
+                                System.out.println("Está bloqueado.");
+                                System.out.println("Motivo: " + c.blockedReason());
+                            } else {
+                                System.out.println("Não está bloqueado.");
+                            }
+                            System.out.println("Já foi bloqueado " + c.blocksAmount() + " vezes.");
+                            System.out.printf("Está no momento na coluna: %s. %s\n", c.columnId(), c.columnName());
+                        },
+                        () -> System.out.println("Não existe um CARD com o ID informado"));
     }
 }
